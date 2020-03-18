@@ -19,7 +19,21 @@ module.exports = function (database) {
                 });
             })
 
-        },
+        }
+        ,
+        excluiCarro: async function (carro) {
+            return new Promise(async (resolve, reject) => {
+                await database.run(`DELETE FROM Carros where nome = ?)`, [carro.nome], function (err) {
+                    if (err) {
+                        reject(err)
+                    }
+                    console.log(`Carro excluído com sucesso linha ${this.lastID}`);
+                    resolve(this.lastID)
+                });
+            })
+
+        }
+        ,
         mostraCarros: async function () {
             return new Promise(async (resolve, reject) => {
                 var carros = []
