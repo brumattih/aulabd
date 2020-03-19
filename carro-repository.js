@@ -21,13 +21,14 @@ module.exports = function (database) {
 
         }
         ,
-        excluiCarro: async function (carro) {
+        excluiCarro: async function (nome) {
             return new Promise(async (resolve, reject) => {
-                await database.run(`DELETE FROM Carros where nome = ?)`, [carro.nome], function (err) {
+                await database.run(`DELETE FROM Carros WHERE nome=?`, nome, function (err) {
                     if (err) {
-                        reject(err)
+                        return reject(err)
                     }
                     console.log(`Carro excluído com sucesso linha ${this.lastID}`);
+
                     resolve(this.lastID)
                 });
             })
@@ -55,5 +56,68 @@ module.exports = function (database) {
                 });
             })
         }
+        ,
+        mostraMaisCaro: async function () {
+            return new Promise(async (resolve, reject) => {
+                var carros = []
+                let sql = `SELECT nome, MAX(valor) as valor FROM Carros`;
+                await database.all(sql, [], (err, rows) => {
+                    if (err) {
+                        reject(err)
+                    }
+                    rows.forEach((row) => {
+                        carros.push({
+                            nome: row.nome,
+                            valor: row.valor
+
+                        })
+                    });
+                    resolve(carros)
+                });
+            })
+        }
+        ,
+        mostraMaisBarato: async function () {
+            return new Promise(async (resolve, reject) => {
+                var carros = []
+                let sql = `SELECT nome, MIN(valor) as valor FROM Carros`;
+                await database.all(sql, [], (err, rows) => {
+                    if (err) {
+                        reject(err)
+                    }
+                    rows.forEach((row) => {
+                        carros.push({
+                            nome: row.nome,
+                            valor: row.valor
+
+                        })
+                    });
+                    resolve(carros)
+                });
+            })
+        }
+        ,
+        ordenaPrecoDesc: async function () {
+            return new Promise(async (resolve, reject) => {
+                var carros = []
+                let sql = `SELECT * FROM Carros ORDER BY valor DESC`;
+                await database.all(sql, [], (err, rows) => {
+                    if (err) {
+                        reject(err)
+                    }
+                    rows.forEach((row) => {
+                        carros.push({
+                            nome: row.nome,
+                            cor: row.cor,
+                            ano: row.ano,
+                            valor: row.valor
+
+                        })
+                    });
+                    resolve(carros)
+                });
+            })
+        }
+        
     }
 }
