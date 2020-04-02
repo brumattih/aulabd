@@ -22,11 +22,11 @@ var bancoDeDados = admin.database().ref(nomeTabelaCarros);
 
 if (choice == 1) {
   var carroNome = user.question("Digite o nome do carro: ")
-  var carroValor = user.question("Digite o valor do carro: ")
+  var carroValor = user.questionFloat("Digite o valor do carro: ")
 
   bancoDeDados.push({
     nome: `${carroNome}`,
-    valor: `${carroValor}`
+    valor: carroValor
   })
 } else if (choice == 2) {
   bancoDeDados.orderByChild('valor')
@@ -34,19 +34,19 @@ if (choice == 1) {
       console.log(snapshot.val())
     })
 } else if (choice == 3) {
-  var maiorValor = user.question("Digite o número para filtrar os carros que possuem o valor maior que: ")
+  var maiorValor = user.questionFloat("Digite o número para filtrar os carros que possuem o valor maior que: ")
   bancoDeDados.orderByChild('valor').startAt(maiorValor)
     .on('child_added', (snapshot) => {
       console.log(snapshot.val())
     })
 } else if (choice == 4) {
-  var menorValor = user.question("Digite o número para filtrar os carros que possuem o valor menor que: ")
+  var menorValor = user.questionFloat("Digite o número para filtrar os carros que possuem o valor menor que: ")
   bancoDeDados.orderByChild('valor').endAt(menorValor)
     .on('child_added', (snapshot) => {
       console.log(snapshot.val())
     })
 } else if (choice == 5) {
-  var valorExato = user.question("Digite o número para filtrar os carros que possuem o valor de: ")
+  var valorExato = user.questionFloat("Digite o número para filtrar os carros que possuem o valor de: ")
   bancoDeDados.orderByChild('valor').equalTo(valorExato)
     .on('child_added', (snapshot) => {
       console.log(snapshot.val())
